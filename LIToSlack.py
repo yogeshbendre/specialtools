@@ -13,7 +13,7 @@ def postAlert(mychannel, myalertname, mymessage):
     print("Channel: "+mychannel)
     print("Message: "+mymessage)
     mytoken=json.load(open("bot_token.json","r"))
-    slack_token = mytoken["token"]#"xoxb-2154537752-1082420677300-Oodl4DjG1AY3gbo5Z5whO32e"
+    slack_token = mytoken["token"] #""
     client = WebClient(slack_token, timeout=30)
 
     order_dm = client.chat_postMessage(
