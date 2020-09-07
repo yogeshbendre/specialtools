@@ -33,7 +33,7 @@ with open(yamlfile) as f:
                     print("DEV_STACK already present.")
             if not isdevstack:
                 print("Adding DEV_STACK entry.")
-                mydoc["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]["env"].append({'name':'DEV_STACK','value':'"true"'})
+                mydoc["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]["env"].append({'name':'DEV_STACK','value':'true'})
                 print(mydoc["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]["env"])
   
         newdocs.append(mydoc)
