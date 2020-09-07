@@ -11,8 +11,8 @@ import yaml
 yamlfile = '/usr/lib/vmware-wcp/objects/PodVM-GuestCluster/70-tmc-agent-installer/tmc-agent-installer.yaml'
 newyamlfile = '/usr/lib/vmware-wcp/objects/PodVM-GuestCluster/70-tmc-agent-installer/tmc-agent-installer.yaml'
 
-yamlfile = '/root/YSB/tmc-agent-installer.yaml'
-newyamlfile = yamlfile
+#yamlfile = '/root/YSB/tmc-agent-installer.yaml'
+#newyamlfile = yamlfile
 
 
 with open(yamlfile) as f:
