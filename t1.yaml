@@ -1,0 +1,226 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: svc-tmc-c8
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.1-0.20200617211605-651903477185
+    tmc.cloud.vmware.com/orphan-resource: "true"
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+    controller-tools.k8s.io: "1.0"
+  creationTimestamp: null
+  name: agentinstalls.installers.tmc.cloud.vmware.com
+spec:
+  group: installers.tmc.cloud.vmware.com
+  names:
+    kind: AgentInstall
+    listKind: AgentInstallList
+    plural: agentinstalls
+    singular: agentinstall
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: AgentInstall is the Schema for the agents API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: AgentInstallSpec defines the desired state of Agent
+          properties:
+            operation:
+              type: string
+            registrationLink:
+              type: string
+          type: object
+        status:
+          description: AgentInstallStatus defines the observed state of agent installation
+          properties:
+            message:
+              type: string
+            retryCount:
+              type: integer
+            status:
+              type: string
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  name: tmc-agent-installer
+  namespace: svc-tmc-c8
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  creationTimestamp: null
+  name: tmc-agent-installer-role
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+- nonResourceURLs: ['*']
+  verbs: ['*']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  creationTimestamp: null
+  name: tmc-agent-installer-rolebinding
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tmc-agent-installer-role
+subjects:
+- kind: ServiceAccount
+  name: tmc-agent-installer
+  namespace: svc-tmc-c8
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tmc-agent-installer
+  namespace: svc-tmc-c8
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+spec:
+  schedule: "*/1 * * * *"
+  startingDeadlineSeconds: 180
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels:
+        tmc.cloud.vmware.com/exclude-from-detach: "true"
+    spec:
+      template:
+        metadata:
+          labels:
+            tmc.cloud.vmware.com/exclude-from-detach: "true"
+        spec:
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/master
+              operator: Exists
+            - key: CriticalAddonsOnly
+              operator: Exists
+            - effect: NoExecute
+              key: node.alpha.kubernetes.io/notReady
+              operator: Exists
+            - effect: NoExecute
+              key: node.alpha.kubernetes.io/unreachable
+              operator: Exists
+            - effect: NoSchedule
+              key: kubeadmNode
+              operator: Equal
+              value: master
+          nodeSelector:
+            node-role.kubernetes.io/master: ""
+          hostNetwork: true
+          serviceAccountName: tmc-agent-installer
+          restartPolicy: Never
+          containers:
+          - command:
+            - /tmc-agent-installer
+            image: localhost:5000/vmware/tmc-agent-installer:1.0
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              runAsUser: 10000
+              runAsGroup: 1000
+            name: tmc-agent-installer
+            env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            resources:
+              limits:
+                cpu: 100m
+                memory: 128Mi
+              requests:
+                cpu: 100m
+                memory: 64Mi
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: vi-admin-tmc-extension-config-role
+  namespace: svc-tmc-c8
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+rules:
+- apiGroups:
+  - installers.tmc.cloud.vmware.com
+  resources:
+  - agentinstalls
+  verbs:
+  - create
+  - get
+  - list
+  - delete
+  - update
+  - patch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: wcp:administrator:tmc-extension-config-role
+  namespace: svc-tmc-c8
+  labels:
+    tmc.cloud.vmware.com/exclude-from-detach: "true"
+  annotations:
+    tmc.cloud.vmware.com/orphan-resource: "true"
+subjects:
+- kind: Group
+  name: sso:Administrators@vsphere.local
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: vi-admin-tmc-extension-config-role
+  apiGroup: rbac.authorization.k8s.io
