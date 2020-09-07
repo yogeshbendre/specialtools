@@ -38,5 +38,5 @@ with open(yamlfile) as f:
   
         newdocs.append(mydoc)
         
-    with open(newyamlfile, 'w') as f:
-        data = yaml.dump_all(newdocs, f, default_flow_style = False)
+    with open(newyamlfile, 'w') as f2:
+        data = yaml.dump_all(newdocs, f2, default_flow_style = False)
