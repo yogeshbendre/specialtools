@@ -1,7 +1,7 @@
 #!/bin/bash
 cd alltkc
 wget https://raw.githubusercontent.com/yogeshbendre/specialtools/master/kb.yaml -O kb.yaml
-kclist=$(ls | grep kubeconfig)
+kclist=$(ls | grep kubeconfig | head -n 5)
 
 for i in $kclist:
 do
