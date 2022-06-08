@@ -5,6 +5,7 @@ kclist=$(ls | grep kubeconfig)
 
 for i in $kclist:
 do
+echo $i
 kubectl --kubeconfig $i create ns cis || true
 kubectl --kubeconfig $i -n cis apply -f kb.yaml || true
 done
@@ -12,6 +13,7 @@ done
 echo "tkc,score" > cisscore.txt
 for i in $kclist:
 do
+echo $i
 a=$(kubectl --kubeconfig $i -n cis get pods -o=custom-columns="DATA:.metadata.name" || true)
 b=($a)
 pname=${b[1]}
