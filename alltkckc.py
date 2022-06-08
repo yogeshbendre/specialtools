@@ -17,3 +17,10 @@ for s in alltkc[1:]:
   proc = subprocess.Popen(cmd,shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
   my_status, stderr_value = proc.communicate()
   my_status = my_status.decode("utf-8").strip()
+  
+  #kubectl get secret -n $ns $c-ssh -o jsonpath='{.data.ssh-privatekey}' | base64 -d > $c-ssh
+  cmd = "kubectl get secret -n "+ns+" "+tkc+"-ssh -o jsonpath='{.data.ssh-privatekey}' | base64 -d > "+tkc+"-ssh"
+  proc = subprocess.Popen(cmd,shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  my_status, stderr_value = proc.communicate()
+  my_status = my_status.decode("utf-8").strip()
+
