@@ -3,7 +3,7 @@ cd alltkc
 wget https://raw.githubusercontent.com/yogeshbendre/specialtools/master/kb.yaml -O kb.yaml
 kclist=$(ls | grep kubeconfig | head -n 5)
 
-for i in $kclist:
+for i in $kclist
 do
 echo $i
 kubectl --kubeconfig $i delete ns cis || true
@@ -12,7 +12,7 @@ kubectl --kubeconfig $i -n cis apply -f kb.yaml || true
 done
 
 echo "tkc,score" > cisscore.txt
-for i in $kclist:
+for i in $kclist
 do
 echo $i
 a=$(kubectl --kubeconfig $i -n cis get pods -o=custom-columns="DATA:.metadata.name" || true)
