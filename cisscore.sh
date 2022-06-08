@@ -19,6 +19,7 @@ a=$(kubectl --kubeconfig $i -n cis get pods -o=custom-columns="DATA:.metadata.na
 b=($a) || true
 pname=${b[1]} || true
 echo "Checking $pname of $i"
+echo "kubectl --kubeconfig $i -n cis logs $pname"
 pdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep PASS) || true
 fdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep FAIL) || true
 wdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep WARN) || true
@@ -35,4 +36,5 @@ score=$((100*per/t)) || true
 echo "$i,$score" >> cisscore.txt
 done
 
+cat cisscore.txt
 
