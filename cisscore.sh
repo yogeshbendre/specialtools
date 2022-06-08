@@ -35,6 +35,6 @@ score=$((100*per/t)) || true
 
 echo "$i,$score" >> cisscore.txt
 done
-
+echo "Complete Scan Results"
 cat cisscore.txt
 
