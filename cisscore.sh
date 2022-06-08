@@ -10,7 +10,7 @@ kubectl --kubeconfig $i delete ns cis || true
 kubectl --kubeconfig $i create ns cis || true
 kubectl --kubeconfig $i -n cis apply -f kb.yaml || true
 done
-
+sleep 30
 echo "tkc,score" > cisscore.txt
 for i in $kclist
 do
