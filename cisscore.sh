@@ -17,10 +17,11 @@ echo $i
 a=$(kubectl --kubeconfig $i -n cis get pods -o=custom-columns="DATA:.metadata.name" || true)
 b=($a)
 pname=${b[1]}
-pdata=$(kubectl --kubeconfig tkgns1-c1-kubeconfig -n cis logs $pname | tail -n 6 | grep PASS)
-fdata=$(kubectl --kubeconfig tkgns1-c1-kubeconfig -n cis logs $pname | tail -n 6 | grep FAIL)
-wdata=$(kubectl --kubeconfig tkgns1-c1-kubeconfig -n cis logs $pname | tail -n 6 | grep WARN)
-idata=$(kubectl --kubeconfig tkgns1-c1-kubeconfig -n cis logs $pname | tail -n 6 | grep INFO)
+echo "Checking $pname of $i"
+pdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep PASS)
+fdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep FAIL)
+wdata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep WARN)
+idata=$(kubectl --kubeconfig $i -n cis logs $pname | tail -n 6 | grep INFO)
 
 p1=($pdata)
 f1=($fdata)
