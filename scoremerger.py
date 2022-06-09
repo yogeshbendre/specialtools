@@ -1,6 +1,6 @@
 import argparse
 import os
-
+import json
 
 def mergeScores(f,vc,wcp):
 
@@ -52,7 +52,7 @@ def mergeScores(f,vc,wcp):
     myscores[vc]["avg"] = str(wcpavg)
     print(myscores)
     with open("result.json","w") as fp2:
-        fp2.write(myscores)
+        json.dump(myscores,fp2)
         
 
 
