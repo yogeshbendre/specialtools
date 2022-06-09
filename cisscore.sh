@@ -11,7 +11,7 @@ kubectl --kubeconfig $i create ns cis || true
 kubectl --kubeconfig $i -n cis apply -f kb.yaml || true
 done
 sleep 30
-echo "tkc,score" > cisscore.txt
+echo "tkc,score" > cisscore.csv
 for i in $kclist
 do
 echo $i
@@ -33,8 +33,8 @@ t=$((p1 + f1 + w1 + i1)) || true
 per=$((t - f1)) || true
 score=$((100*per/t)) || true
 
-echo "$i,$score" >> cisscore.txt
+echo "$i,$score" >> cisscore.csv
 done
 echo "Complete Scan Results"
-cat cisscore.txt
+cat cisscore.csv
 
