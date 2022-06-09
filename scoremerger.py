@@ -44,6 +44,7 @@ def mergeScores(f,vc,wcp):
         wcpavg = wcptotal/wcpn
     myscores[vc][wcp]["avg"] = str(wcpavg)
     myscores[vc]["avg"] = str(wcpavg)
+    print(myscores)
         
     
 
