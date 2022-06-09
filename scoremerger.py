@@ -23,7 +23,7 @@ def mergeScores(f,vc,wcp):
                 score = e[1]
                 if tkc not in myscores[vc][wcp].keys():
                     myscores[vc][wcp][tkc] = {}
-                myscores[vc][wcp][tkc][s.replace(".csv","")] = score
+                myscores[vc][wcp][tkc][s.replace(".csv","").replace("score","")] = score
     vcavg = 0
     wcpavg = 0
     wcptotal = 0
