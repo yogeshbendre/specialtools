@@ -3,28 +3,34 @@ import os
 
 
 def mergeScores(f,vc,wcp):
-    
+
     allFiles = os.listdir()
     myscores = {vc: {"avg":"0", wcp: {"avg":"0"}}}
-    
-    for s in myfiles:
+
+    for s in allFiles:
         if('.csv' in s):
             mydata = ""
             with open(s,"r") as fp:
                 mydata = fp.read().split("\n")[1:]
             for e in mydata:
-                tkc = e.split(",")[0].replace("-kubeconfig","")
-                score = e.split(",")[1]
-                if tkc not in myscores.keys():
-                    myscores[tkc] = {}
-                myscores[vc][wcp][tkc][s.replace(".csv","")] = scor
+                if("," not in e):
+                    continue
+                print(e)
+                e=e.split(",")
+                print("Now")
+                print(e)
+                tkc = e[0].replace("-kubeconfig","")
+                score = e[1]
+                if tkc not in myscores[vc][wcp].keys():
+                    myscores[vc][wcp][tkc] = {}
+                myscores[vc][wcp][tkc][s.replace(".csv","")] = score
     vcavg = 0
     wcpavg = 0
     wcptotal = 0
     wcpn = 0
     for t in myscores[vc][wcp].keys():
         if "avg" in t:
-            continue:
+            continue
         ttotal = 0
         tn = 0
         for sc in myscores[vc][wcp][t].keys():
@@ -32,21 +38,24 @@ def mergeScores(f,vc,wcp):
                 continue
             ttotal = ttotal + int(myscores[vc][wcp][t][sc])
             tn = tn + 1
-        
+
         tavg = 0
         if tn>0:
-            tavg = ttotal/tn
+            tavg = int(ttotal/tn)
         myscores[vc][wcp][t]["avg"] = str(tavg)
         wcptotal = wcptotal + tavg
-        wcpn = wcp + 1
-    
+        wcpn = wcpn + 1
+
     if wcpn>0:
-        wcpavg = wcptotal/wcpn
+        wcpavg = int(wcptotal/wcpn)
     myscores[vc][wcp]["avg"] = str(wcpavg)
     myscores[vc]["avg"] = str(wcpavg)
     print(myscores)
+    with open("result.json","w") as fp2:
+        fp2.write(myscores)
         
-    
+
+
 
 
 
@@ -62,14 +71,15 @@ def main():
     f = args['folder']
     vc = args['vc']
     wcp = args['wcp']
-    
+
     mergeScores(f,vc,wcp)
-    
-    
-    
-    
-    
+
+
+
+
+
 if __name__ == "__main__":
     main()
+
 
 
