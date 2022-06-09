@@ -4,4 +4,4 @@ wget https://raw.githubusercontent.com/yogeshbendre/specialtools/master/scoremer
 vc=$1
 wcp=$2
 
-python scoremerger.py ./ $vc $wcp
+python scoremerger.py -f ./ -v $vc -w $wcp
