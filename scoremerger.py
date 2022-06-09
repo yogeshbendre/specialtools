@@ -62,7 +62,7 @@ def mergeScores(f,vc,wcp):
 
 def main():
     parser=argparse.ArgumentParser(description='Score Merger')
-    parser.add_argument("-fw", "--folder", help="Folder path", required=True)
+    parser.add_argument("-f", "--folder", help="Folder path", required=True)
     parser.add_argument("-v", "--vc", help= "VC Name", required=True)
     parser.add_argument("-w", "--wcp", help= "WCP Cluster", required=True)
 
